@@ -16,4 +16,4 @@ The Following things are supported:<br>
 </ul>
 
 ## Missing Bits
-Currently I'm aware that there is no interface for update statements and join statements. For the time being this can be worked around by using the `SqlSnake::newqQuery()` function.
+Currently I'm aware that there is no interface for update statements and join statements. For the time being this can be worked around by using the `SqlSnake::newQuery()` function.
