@@ -90,6 +90,25 @@ class SqlSnake{
                         return (const char *)to_3;
                 }
 
+		string desanitize(string clean){
+                        string ret = "";
+                        for(int i=0; i<clean.length(); i++){
+                                ret += clean[i];
+                                if(ret.length() >= 3){
+                                        string grabber = "";
+                                        grabber += ret[ret.length()-3];
+                                        grabber += ret[ret.length()-2];
+                                        grabber += ret[ret.length()-1];
+                                        if(grabber == "\\\\n"){
+                                                for(int j=0; j<3; j++)
+                                                        ret.pop_back();
+                                                ret += 0x0a;
+                                        }
+                                }
+                        }
+                        return ret;
+                }
+
 		void close(){
                         if(this->results != NULL){
                                 mysql_free_result(this->results);
