@@ -71,22 +71,23 @@ class SqlSnake{
                                 error = "Failed to connect to db service for sanitization.";
 				return "";
 			}
+			char *to = new char[dirty.length()*2+1]; memset(to, '\0', dirty.length()*2+1);
 
-                        char *to = new char[dirty.length()]; memset(to, '\0', dirty.length());
-
-                        mysql_real_escape_string_quote(this->connection, to, dirty.c_str(), dirty.length(), '\'');
+                        unsigned long s= mysql_real_escape_string_quote(this->connection, to, dirty.c_str(), dirty.length(), '\'');
                         dirty = to;
-                        to = new char[dirty.length()]; memset(to, '\0', dirty.length());
+                        delete[] to;
+                        char *to_2 = new char[s*2+1]; memset(to_2, '\0', s*2+1);
 
-                        mysql_real_escape_string_quote(this->connection, to, dirty.c_str(), dirty.length(), '"');
-                        dirty = to;
-                        to = new char[dirty.length()]; memset(to, '\0', dirty.length());
+                        s = mysql_real_escape_string_quote(this->connection, to_2, dirty.c_str(), s, '"');
+                        dirty = to_2;
+                        delete[] to_2;
 
-                        mysql_real_escape_string_quote(this->connection, to, dirty.c_str(), dirty.length(), '.');
-                        string ret = to;
+                        char *to_3 = new char[s*2+1]; memset(to_3, '\0', s*2+1);
+                        mysql_real_escape_string_quote(this->connection, to_3, dirty.c_str(), s, '.');
+
 
                         this->close();
-                        return ret;
+                        return (const char *)to_3;
                 }
 
 		void close(){
