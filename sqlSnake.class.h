@@ -483,6 +483,16 @@ class SqlSnake{
 			return newQuery(q);
 		}
 
+		sqlwhere_t generateWhere(string column, string operation, string value, bool quoted){
+                        sqlwhere_t ret;
+                        ret.column = sanitize(column);
+                        ret.operation = operation;
+                        if(quoted)
+                                ret.value = "'"+sanitize(value)+"'";
+                        else
+                                ret.value = sanitize(value);
+                        return ret;
+                }
 		sqlwhere_t generateWhere(string column, string operation, string value){
 			sqlwhere_t ret;
 			ret.column = sanitize(column);
