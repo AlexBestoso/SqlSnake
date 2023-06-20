@@ -162,6 +162,34 @@ SqlSnake testDatabaseDelete(SqlSnake sql){
 	return sql;
 }
 
+SqlSnake testUpdateStatement(SqlSnake sql){
+	sqlupdate_t update;
+	update.table = "test_table";
+	update.valueCount = 2;
+	update.values = new string[2]{
+		"star",
+		"morning"
+	};
+	update.cols = new string[2]{
+		"test_firstname",
+		"test_lastname"
+	};
+	update.wheres = sql.addToWhere(update.wheres,
+			sql.generateWhere("test_id", "=", "1"), "");
+
+	if(!sql.secureUpdate(update)){
+		printf("Failed to run UPDATE statement. : %s\n", sql.getError().c_str());
+                if(!sql.removeDatabase(sql.getDatabase())){
+                        printf("Failed to delete database.\n\t%s\n", sql.getError().c_str());
+                }
+                sql.close();
+                exit(EXIT_FAILURE);
+	}else{
+		printf("[+] Successfully updated test database.\n");
+	}
+	return sql;
+}
+
 int main(){
 	SqlSnake sql;
 
@@ -186,6 +214,7 @@ int main(){
 	sql = testTableCreation(sql);
 	sql = testTableInsert(sql);
 	sql = testTableSelect(sql);
+	sql = testUpdateStatement(sql);
 	sql = testRowDelete(sql);
 	sql = testDatabaseDelete(sql);
 

@@ -8,12 +8,13 @@ The Following things are supported:<br>
 <li>Direct Query execution</li>
 <li>Database Creation</li>
 <li>Table Creation with both primary and foreign keys</li>
-<li>Insert Statements</li>
-<li>Select Statements</li>
+<li>Insert statements</li>
+<li>Select statements</li>
 <li>Delete statements</li>
+<li>Update statements
 <li>Database deletion</li>
 <li>Table deletion</li>
 </ul>
 
 ## Missing Bits
-Currently I'm aware that there is no interface for update statements and join statements. For the time being this can be worked around by using the `SqlSnake::newQuery()` function.
+Currently I'm aware that there are no join statements. For the time being this can be worked around by using the `SqlSnake::newQuery()` function.
