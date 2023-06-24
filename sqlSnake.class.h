@@ -71,43 +71,44 @@ class SqlSnake{
                                 error = "Failed to connect to db service for sanitization.";
 				return "";
 			}
-			char *to = new char[dirty.length()*2+1]; memset(to, '\0', dirty.length()*2+1);
+
+                        char *to = new char[dirty.length()*2+1]; memset(to, '\0', dirty.length()*2+1);
 
                         unsigned long s= mysql_real_escape_string_quote(this->connection, to, dirty.c_str(), dirty.length(), '\'');
-                        dirty = to;
-                        delete[] to;
-                        char *to_2 = new char[s*2+1]; memset(to_2, '\0', s*2+1);
+			dirty = to;
+			delete[] to;
+			char *to_2 = new char[s*2+1]; memset(to_2, '\0', s*2+1);
 
                         s = mysql_real_escape_string_quote(this->connection, to_2, dirty.c_str(), s, '"');
-                        dirty = to_2;
-                        delete[] to_2;
+			dirty = to_2;
+			delete[] to_2;
 
-                        char *to_3 = new char[s*2+1]; memset(to_3, '\0', s*2+1);
+			char *to_3 = new char[s*2+1]; memset(to_3, '\0', s*2+1);
                         mysql_real_escape_string_quote(this->connection, to_3, dirty.c_str(), s, '.');
-
+                        
 
                         this->close();
                         return (const char *)to_3;
                 }
 
 		string desanitize(string clean){
-                        string ret = "";
-                        for(int i=0; i<clean.length(); i++){
-                                ret += clean[i];
-                                if(ret.length() >= 3){
-                                        string grabber = "";
-                                        grabber += ret[ret.length()-3];
-                                        grabber += ret[ret.length()-2];
-                                        grabber += ret[ret.length()-1];
-                                        if(grabber == "\\\\n"){
-                                                for(int j=0; j<3; j++)
-                                                        ret.pop_back();
-                                                ret += 0x0a;
-                                        }
-                                }
-                        }
-                        return ret;
-                }
+			string ret = "";
+			for(int i=0; i<clean.length(); i++){
+				ret += clean[i];
+				if(ret.length() >= 3){
+					string grabber = "";
+					grabber += ret[ret.length()-3];
+					grabber += ret[ret.length()-2];
+					grabber += ret[ret.length()-1];
+					if(grabber == "\\\\n"){
+						for(int j=0; j<3; j++)
+							ret.pop_back();
+						ret += 0x0a;
+					}
+				}
+			}
+			return ret;
+		}
 
 		void close(){
                         if(this->results != NULL){
@@ -513,6 +514,7 @@ class SqlSnake{
                                 ret.value = sanitize(value);
                         return ret;
                 }
+
 		sqlwhere_t generateWhere(string column, string operation, string value){
 			sqlwhere_t ret;
 			ret.column = sanitize(column);
@@ -629,9 +631,9 @@ class SqlSnake{
 				return false;
 			}
 
-			string q = "UPDATE TABLE "+sanitize(update.table) + " SET ";
+			string q = "UPDATE "+sanitize(update.table) + " SET ";
 			for(int i=0; i<update.valueCount; i++){
-				q += sanitize(update.cols[i]) + "=" + sanitize(update.values[i]);
+				q += sanitize(update.cols[i]) + "=" + "'"+sanitize(update.values[i])+"'";
 				if((i+1) < update.valueCount){
 					q += ",";
 				}
@@ -640,7 +642,7 @@ class SqlSnake{
 			if(update.wheres.whereCount > 0){
 				q += " WHERE " + generateWhereString(update.wheres);
 			}
-			return true;
+			return newQuery(q);
 		}
 
 
