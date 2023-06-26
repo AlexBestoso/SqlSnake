@@ -432,7 +432,7 @@ class SqlSnake{
 				for(int i=0; i<table.colCount; i++){
 					if(table.cols[i].foreign){
 						foreign[ctr] = "FOREIGN KEY ("+sanitize(table.cols[i].name);
-						foreign[ctr] += ") REFEREBCES "+sanitize(table.cols[i].foreignTable);
+						foreign[ctr] += ") REFERENCES "+sanitize(table.cols[i].foreignTable);
 						foreign[ctr] += "("+sanitize(table.cols[i].foreignColumn) + ")";
 						ctr++;
 					}
